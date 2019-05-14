@@ -1,0 +1,6 @@
+"zombie"
+{
+	"base"		"base"
+	"title"		"PropKill / Freekill / NO - RP"
+	"menusystem"	"1"
+}
