@@ -21,7 +21,7 @@ AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "gui/IconEditor.lua" )
 AddCSLuaFile( "gui/f4menu.lua" )
 
-include( "teams.lua" )
+include("respawn.lua")
 include( 'shared.lua' )
 include( 'commands.lua' )
 include( 'player.lua' )
@@ -132,8 +132,7 @@ end
 function GM:PlayerInitialSpawn( ply )
 
 	BaseClass.PlayerInitialSpawn( self, ply )
-
-
+	
 end
 
 --[[---------------------------------------------------------

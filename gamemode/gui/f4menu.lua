@@ -30,12 +30,14 @@ local function F4MENU()
 	WINDOW:SetSize( ScrW()/1.3 - 50, ScrH()/1.3 - 50 )
 	WINDOW:Center()
 	WINDOW.Paint = function( self, w, h )
-		draw.RoundedBox( 2, 1, 1, w - 2, h - 2, Color( 255, 255, 255 ) )
+		draw.RoundedBox( 2, 1, 1, w - 2, h - 2, Color( 0, 0, 0 ) )
 		
-		draw.SimpleText( "Lele", "ChatFont", w/2, ScrH()/80, Color( 230, 230, 230 ) )
+		draw.SimpleText( "Change Team", "ChatFont", w/2, ScrH()/80, Color( 230, 230, 230 ) , 1 )
 		
-		surface.SetDrawColor( Color( 242, 242, 242 ) )
+		
+		surface.SetDrawColor( 100, 100 , 100 )
 		surface.DrawLine( 24, 44, w , 44 )
+		
 	end
 	
 	LIST = vgui.Create( "DPanelList", WINDOW )
@@ -51,10 +53,10 @@ local function F4MENU()
 		TEAMFRAME:SetSize( LIST:GetWide(), ScrH()/10 )
 		TEAMFRAME.Paint = function( self, w, h )
 		
-			surface.SetDrawColor( Color( 242, 242, 242 ) )
+			surface.SetDrawColor( Color( 100, 100, 100 ) )
 		
 			surface.DrawLine( 0, h - 1, w, h - 1 )
-			draw.SimpleText( v.name , "ChatFont", w/10 , ScrH()/25 , Color( 0, 0 , 0 ) )
+			draw.SimpleText( v.name , "ChatFont", w/10 , ScrH()/25 , Color( 230, 230 , 230 ) )
 			
 			 
 		end
@@ -67,18 +69,21 @@ local function F4MENU()
 		local BUTTON = vgui.Create( "DButton", TEAMFRAME )
 		BUTTON:SetSize( ScrH()/10, ScrW()/50 )
 		BUTTON:SetPos( TEAMFRAME:GetWide() - ScrW()/10, (TEAMFRAME:GetTall() / 2) - ScrH()/60 )
-		BUTTON:SetText( "Become" )
+		BUTTON:SetText( "Change Team" )
 		BUTTON:SetTextColor( Color( 255, 255, 255 ) )
 		BUTTON.Paint = function( self, w, h )
 			draw.RoundedBox( 4, 0, 0, w, h, Color( 239, 239, 243 ) )
-			draw.RoundedBox( 4, 1, 1, w - 2, h - 2, Color( 76, 76, 76 ) )
-			draw.RoundedBox( 4, 2, 2, w - 4, h - 4, Color( 84, 84, 84 ) )
+			draw.RoundedBox( 4, 1, 1, w - 2, h - 2, Color( 82, 0, 0 ) )
+			draw.RoundedBox( 4, 2, 2, w - 4, h - 4, Color( 84, 0, 0 ) )
 			
 			if self.hover then
 				draw.RoundedBox( 4, 1, 1, w - 2, h - 2, Color( 68, 68, 68 ) )
 			end
 		end
 		BUTTON.DoClick = function()
+			net.Start("propkill_changeteam", false)
+			net.WriteUInt( k , 8 )
+			net.SendToServer()
 			MAIN:Remove()
 			F4MENUOPNED = !F4MENUOPNED
 		end

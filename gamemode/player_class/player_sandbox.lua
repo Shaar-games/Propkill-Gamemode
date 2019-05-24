@@ -48,11 +48,16 @@ function PLAYER:Loadout()
 
 	self.Player:StripWeapons()
  
-	local Weapons = TeamGetinfo( self.Player:Team() ).weapons
+	local info = GAMEMODE.TeamGetinfo( self.Player:Team() )
 
-	for k , weapon in pairs( Weapons ) do
-	 	self.Player:Give( weapon )
-	 end 
+	if info then
+		if info.weapons then
+			for k,v in pairs(info.weapons) do
+				self.Player:Give( v )
+				print( v )
+			end
+		end
+	end
 
 	self.Player:SwitchToDefaultWeapon()
 

@@ -1,4 +1,4 @@
-
+if CLIENT then return end
 local util  	= util
 local file  	= file
 
@@ -11,14 +11,21 @@ baseTeams["Spectator"] = Color( 30 , 255 , 30 )
 
 local Teams = {}
 
-function TeamGetinfo( name )
-	
-	return Teams[name] or nil
+
+local noteam = {}
+noteam.weapons = {}
+noteam.model = "models/player/p2_chell.mdl"
+noteam.name = "no team"
+noteam.color = Color( 255 , 255 , 255 )
+noteam.adminonly = false
+
+function GAMEMODE.TeamGetinfo( name )
+	return Teams[name] or noteam
 end
 
 team.Count = team.Count or 0
 
-local function CreateTeams( name , col , tblWeapons , model ,  adminonly )
+local function CreateTeam( name , col , tblWeapons , model ,  adminonly )
 
 	team.Count = team.Count + 1
 
@@ -36,7 +43,7 @@ local function CreateTeams( name , col , tblWeapons , model ,  adminonly )
 end
 
 for name , col in pairs(baseTeams) do
-	CreateTeams( name , col , {"weapon_physgun"} , "models/player/combine_super_soldier.mdl" , false )
+	CreateTeam( name , col , baseTeams.weapons or {} , "models/player/combine_super_soldier.mdl" , false )
 end
 
 local function LoadCustomTeam( x )
@@ -48,7 +55,7 @@ local function LoadCustomTeam( x )
 		return 
 	end
   
-	CreateTeams( x.name , x.color , x.weapons , x.model , x.adminonly )
+	CreateTeam( x.name , x.color , x.weapons , x.model , x.adminonly )
 
 end
 
@@ -67,8 +74,6 @@ for k,v in pairs(Teams) do
 end
 
 local function Sendteams( ply )
-
-	ply:SetTeam( TEAM_PROPKILLER )
 	net.Start("propkill_changeteam", false )
 	net.WriteTable( Teams )
 	net.Send( ply )
@@ -80,6 +85,16 @@ hook.Add("PlayerInitialSpawn","Propkill_Sendteams", Sendteams )
 for k,v in pairs(player.GetAll()) do
 	Sendteams( v )
 end
+
+local function callback( len , ply)
+	local t = net.ReadUInt( 8 )
+	if !Teams[t].name or ply:Team() == t then return end
+	ply:SetTeam( t )
+	ply:Spawn()
+	print( "team changed " , Teams[t].name )
+end
+
+net.Receive("propkill_changeteam",callback)
 
  --local Default = {}
 --

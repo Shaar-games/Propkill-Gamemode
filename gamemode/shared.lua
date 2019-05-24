@@ -9,6 +9,7 @@
 include( "player_extension.lua" )
 include( "persistence.lua" )
 include( "save_load.lua" )
+include( "teams.lua" )
 include( "player_class/player_sandbox.lua" )
 include( "drive/drive_sandbox.lua" )
 include( "editor_player.lua" )
