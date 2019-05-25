@@ -26,6 +26,7 @@ include( 'shared.lua' )
 include( 'commands.lua' )
 include( 'player.lua' )
 include( 'spawnmenu/init.lua' )
+--include( 'sv_entity.lua' )
 
 
 RunConsoleCommand( "sv_airaccelerate", 1000 )
@@ -207,18 +208,24 @@ function GM:PlayerDeath( ply , inflictor, attacker )
 	--ply:EmitSound(string.format("player/death%d.wav", math.random(1, 6)), 100, 100, 1, CHAN_BODY);
 end
 
+function GAMEMODE:InitPostEntity()
 
-hook.Add("PlayerSpawn","visible",function( ply )
+	local physData = physenv.GetPerformanceSettings()
+	
+	if physData then
 
-    local col = ply:GetWeaponColor()
-    ply:SetWeaponColor( Vector( col.x * 255 + 30 , col.y * 255 + 30 , col.z * 255 + 30  ) )
+		physData.MaxVelocity = 2500
 
-end)
+		physData.MaxAngularVelocity	= 3636
 
-hook.Add( "PlayerCanHearPlayersVoice", "VoiceChat_Maximum_Range", function( listener, talker )
-	if listener:GetPos():Distance( talker:GetPos() ) > 550 then return false end
-end )
+		physData.MaxCollisionsPerObjectPerTimestep = 100
 
-print("init.lua")
+		physData.LookAheadTimeObjectsVsObject = 1
 
+		physenv.SetPerformanceSettings( physData )
 
+	end
+
+end
+
+PrintTable( GM )
